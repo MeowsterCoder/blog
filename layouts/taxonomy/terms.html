@@ -1,0 +1,37 @@
+{{ define "main" }}
+  <div class="terms">
+    <h1>{{ .Title }}</h1>
+    {{- $taxonomies := .Data.Plural -}}
+    {{- /* Categories Page */ -}}
+    {{- if eq $taxonomies "categories" -}}
+    {{ $type := .Type }}
+    {{ range $key, $value := .Data.Terms.Alphabetical }}
+    {{ $name := .Name }}
+    {{ $count := .Count }}
+    <h2>{{ .Name }}  ({{ $count }})</h2>
+    <ul>
+      {{ with $.Site.GetPage "taxonomy" (printf "/%s/%s" $type $name) }}
+      {{- range  .Pages -}}
+        <li>
+          <a class="terms-title" href="{{ .Permalink }}">{{ .Title | markdownify }}</a>
+        </li>
+      {{ end }}
+    </ul>
+    {{ end }}
+    {{ end }}
+    {{- else -}}
+    <ul>
+      {{ $type := .Type }}
+      {{ range $key, $value := .Data.Terms.Alphabetical }}
+      {{ $name := .Name }}
+      {{ $count := .Count }}
+      {{ with $.Site.GetPage (printf "/%s/%s" $type $name) }}
+      <li>
+        <a class="terms-title" href="{{ .Permalink }}">{{ .Name }} ({{ $count }})</a>
+      </li>
+      {{ end }}
+      {{ end }}
+    </ul>
+    {{ end }}
+  </div>
+{{ end }}
