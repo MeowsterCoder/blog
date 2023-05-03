@@ -3,6 +3,7 @@ User-agent: *
 Disallow: /images/
 Disallow: /js/
 Disallow: /css/
+Disallow: /daily/
 
 User-agent: MJ12bot
 Disallow: /

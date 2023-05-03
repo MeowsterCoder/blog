@@ -7,7 +7,7 @@ cover = ""
 tags = ["Java", "Design Pattern"]
 categories = ["Java Design Pattern"]
 keywords = ["Java", "Design Pattern", "Factory Pattern"]
-description = "讲述工厂模式的实现方法，及其优点和缺点以及应用场景 "
+description = "工厂模式的实现方法，简单工厂模式、工厂方法模式、抽象工厂模式"
 showFullContent = false
 readingTime = false
 hideComments = false
@@ -16,7 +16,7 @@ color = "" #color from the theme settings
 
 
 ## 简单工厂模式
-> 感觉我之前学的有点老了，最新的可以去参考[java-design-patterns](https://java-design-patterns.com/zh/patterns/factory/)
+> 感觉我之前学的有点老了，最新的可以去参考[Factory](https://java-design-patterns.com/zh/patterns/factory/)
 
 简单工厂模式，属于创建型模式，不属于GOF23种设计模式之一。  
 主要适用于生成对象较少的场景，不需要关心类的创建逻辑。  
@@ -82,7 +82,7 @@ public class Main {
 ## 工厂方法模式
 
 > 为创建一个对象定义一个接口，但是让子类决定实例化哪个类。工厂方法允许类将实例化延迟到子类。  
-> 可以参考[java-design-patterns](https://java-design-patterns.com/zh/patterns/factory-method/)
+> 可以参考[Factory Method](https://java-design-patterns.com/zh/patterns/factory-method/)
 
 优点是可以不用关心类的创建细节，符合开闭原则，提高了扩展性  
 缺点是类的数量容易增加，增加了代码结构的复杂程度，增加了系统的抽象性和理解难度
@@ -143,4 +143,93 @@ public class Main {
 ---
 
 ## 抽象工厂
-TODO: 明天补上
+> 创建型模式，提供一个可以创建一个系列或者互相依赖的对象的接口，不需要指定具体的类。  
+> 可以参考[Abstract Factory](https://java-design-patterns.com/zh/patterns/abstract-factory/)
+
+利用抽象工厂，我们可以直接批量创建一系列的对象，不需要关心对象的实现细节  
+缺点是对其进行更新时我们需要去修改对应的细节  
+
+这里我们采用java-design-patterns中类似的参考例子  
+首先每个王国都有国王和军队，国王和军队有各自的行为，我们先分别创建人类和恶魔的国王和军队，并分别实现自己的对应的行为  
+{{< code language="java" title="创建抽象类并进行实现" id="8" expand="Show" collapse="Hide" isCollapsed="false" >}}
+public interface King {
+    void order();
+}
+
+public interface Army {
+    void attack();
+}
+
+public class HumanKing implements King{
+    @Override
+    public void order() {
+        System.out.println("命令人类军队出击！");
+    }
+}
+
+public class HumanArmy implements Army{
+    @Override
+    public void attack() {
+        System.out.println("人类军队出击！");
+    }
+}
+
+public class DemonKing implements King{
+    @Override
+    public void order() {
+        System.out.println("命令魔族军队出击！");
+    }
+}
+
+public class DemonArmy implements Army{
+    @Override
+    public void attack() {
+        System.out.println("魔族军队出击！");
+    }
+}
+
+{{</ code >}}
+
+然后我们在创建王国工厂，用于创建一个王国
+{{< code language="java" title="创建工厂方法并进行实现" id="9" expand="Show" collapse="Hide" isCollapsed="false" >}}
+//这里采用的是接口，如果有公共逻辑，则可以使用抽象类
+public interface KingdomFactory {
+    King createKing();
+    Army createArmy();
+}
+
+public class HumanKingdomFactory implements KingdomFactory{
+    @Override
+    public King createKing() {
+        return new HumanKing();
+    }
+
+    @Override
+    public Army createArmy() {
+        return new HumanArmy();
+    }
+}
+
+public class DemonKingdomFactory implements KingdomFactory{
+    @Override
+    public King createKing() {
+        return new DemonKing();
+    }
+
+    @Override
+    public Army createArmy() {
+        return new DemonArmy();
+    }
+}
+{{</ code >}}
+
+{{< code language="java" title="调用" id="10" expand="Show" collapse="Hide" isCollapsed="false" >}}
+public class Main {
+    public static void main(String[] args) {
+        KingdomFactory humanKindom = new HumanKingdomFactory();
+        humanKindom.createKing().order();
+        humanKindom.createArmy().attack();
+    }
+}
+{{</ code >}}
+{{< figure src="/image/posts/2023-05-04_00-20.png" alt="类图" position="center" style="border-radius: 8px;" caption="类图" captionPosition="center" captionStyle="color: black;" >}}
