@@ -14,6 +14,6 @@ hideComments = false
 color = "" #color from the theme settings
 +++
 暂停更新一段时间，进行一个密集的学习安排  
-博客更新有点妨碍到学习的效率
+博客更新有点影响到学习的效率
 
 
